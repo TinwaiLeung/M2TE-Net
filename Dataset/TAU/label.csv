@@ -1,0 +1,11 @@
+id,name
+0,airport
+1,bus
+2,metro
+3,metro_station
+4,park
+5,public_square
+6,shopping_mall
+7,street_pedestrian
+8,street_traffic
+9,tram
