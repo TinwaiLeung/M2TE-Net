@@ -46,7 +46,7 @@ AVE dataset can be downloaded from https://drive.google.com/open?id=1FjKwe79e0u9
     │   │  ...
 
 ## Training
-For the initialization of weights in the visual module, please download the pre-trained Resnet-50 model and CLIP/Resnet-50.
+For the initialization of weights in the visual module, please download the pre-trained Resnet-50 model and CLIP/Resnet-50 model.
 
 ### For training with the pre-trained Resnet-50 model，run：
     python train_with_Resnet50.py
