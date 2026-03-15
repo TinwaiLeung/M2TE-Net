@@ -50,5 +50,6 @@ For the initialization of weights in the visual module, please download the pre-
 
 For training with the pre-trained Resnet-50 model，run：
     python train_with_Resnet50.py
+
 For training with the pre-trained CLIP/Resnet-50 model，run：
     python train_with_CLIP.py
