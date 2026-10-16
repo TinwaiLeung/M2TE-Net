@@ -80,8 +80,8 @@ def val():
     y_possible = []
     test_loss = 0.
     with torch.no_grad():
-        with tqdm(total=len(test_loader), desc='Test : ', leave=False, ncols=200, unit='batch', unit_scale=True, colour='YELLOW') as pbar:
-            for batch_idx, (x_wav, x_mel, imgs, class_id) in enumerate(test_loader):
+        with tqdm(total=len(val_loader), desc='Test : ', leave=False, ncols=200, unit='batch', unit_scale=True, colour='YELLOW') as pbar:
+            for batch_idx, (x_wav, x_mel, imgs, class_id) in enumerate(val_loader):
                 x_wav, x_mel, imgs, class_id = x_wav.cuda(), x_mel.cuda(), imgs.cuda(), class_id.cuda()
                 batch = imgs.size(0)
                 imgs_list = torch.chunk(imgs, chunks = batch, dim = 0)   
@@ -111,7 +111,7 @@ def val():
     y_pre = torch.cat(y_pre).cpu().detach().numpy() 
     y_true = torch.cat(y_true).cpu().detach().numpy() 
 
-    logLoss = log_loss(y_true,y_possible)
+    logLoss = log_loss(y_true,y_possible, labels=np.arange(y_possible.shape[1]))
     acc = accuracy_score(y_true, y_pre)
         
     return logLoss, acc     
@@ -131,10 +131,10 @@ if __name__ == "__main__":
                                     shuffle = True, num_workers = 16, drop_last = False)   
     val_Dataset = AVE('val', CLIP_preprocess) 
     val_loader = DataLoader(val_Dataset,batch_size = args.batch_size, 
-                                    shuffle = True, num_workers = 16, drop_last = False)  
+                                    shuffle = False, num_workers = 16, drop_last = False)  
     test_Dataset = AVE('test', CLIP_preprocess)
     test_loader = DataLoader(test_Dataset,batch_size = args.batch_size,
-                                    shuffle = True, num_workers = 16, drop_last = False)
+                                    shuffle = False, num_workers = 16, drop_last = False)
     
 
     model = Temporal_Attention(num_classes = 28)   
@@ -170,8 +170,8 @@ if __name__ == "__main__":
         val_Acc_list.append(val_acc_epoch)     
         
         if val_loss_list[-1] == np.min(val_loss_list):
-            with open(output_dir+'AV_model_epoch-{}_BatchSize-{}_date-{}_index-{}-{}.pt'.format(args.n_epoch,args.batch_size,date,idx), 'wb') as f:    # 保存为二进制文件
-                torch.save(model.cpu().state_dict(), f) 
+            with open(output_dir+'AV_model_epoch-{}_BatchSize-{}_date-{}_index-{}.pt'.format(args.n_epoch,args.batch_size,date,idx), 'wb') as f:    # 保存为二进制文件
+                torch.save({key: value.detach().cpu() for key, value in model.state_dict().items()}, f) 
                 print('Best model found and saved.')
 
 
@@ -194,4 +194,5 @@ if __name__ == "__main__":
         plt.savefig('E:/DeepLearning/Projects/TAU-urban-audio-visual-scenes/train/model_audiovideo/'+
                     'AV_loss_epoch-{}_BatchSize-{}_date-{}_index-{}.png'.format(args.n_epoch,args.batch_size,date,idx), dpi=300, bbox_inches='tight')  # 保存损失函数图
         plt.close()
+
 

@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.DS_Store
+Thumbs.db
+*.pt
+*.pth
+*.ckpt
+train/log_csv/
+train/model_audiovideo/
+Dataset/**/audio/
+Dataset/**/video/
+Dataset/**/video frame/
+Dataset/**/keyframe/
